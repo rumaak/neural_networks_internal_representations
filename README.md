@@ -1,2 +1,2 @@
-# neural_networks_internal_representations
+# Internal representations of neural networks
 Analysis of internal representations of deep neural networks
