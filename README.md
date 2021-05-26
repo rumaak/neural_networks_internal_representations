@@ -4,7 +4,7 @@ Analysis of internal representations of deep neural networks
 ### Usage
 Clone the repository and install requirements as specified in `requirements.txt`.
 
-Install PyTorh with GPU support
+Install PyTorch with GPU support
 
 ```
 pip install torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
