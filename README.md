@@ -34,3 +34,32 @@ The network sometimes converges to a suboptimal solution, rerunning the training
 ##### Simple activations example
 An example of neural network activations visualization is currently only available
 as Jupyter notebook. 
+
+##### Activations feedforward example
+A more advanced example concerned with analysis of activations inside trained
+neural networks. There are three ways to access this example:
+- an analysis document of the results
+- a jupyter notebook
+- a script
+
+This example is accompanied by a complete analysis in the format of a pdf.
+This pdf (and corresponding latex document used to generate it) can be found
+in the `docs/activations_feedforward` directory. The same way the reader is
+encouraged to go through the jupyter notebook before running the script the
+reader is encouraged to read this pdf before going through the jupyter
+notebook.
+
+The jupyter notebook also contains description of what is done and why, as well
+as analysis of results. I would highly recommend to go over the notebook first
+before using the script.
+
+The `scripts/activations_feedforward.py` script can be run to acquire the same
+type of results that can be seen in the notebook. However, there is no
+accompanying description of what is done and no analysis. The results are
+saved in the `out/activations_feedforward` directory in format suitable for
+use in LaTeX. It is important to note that the script must be executed while
+in the `scripts/` directory (i.e. the user first has to navigate to that
+directory and after that execute the script); this is because the path to
+the `out` directory is computed relative to the current working directory.
+
+

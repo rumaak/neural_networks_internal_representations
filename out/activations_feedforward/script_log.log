@@ -1,0 +1,22 @@
+2021-07-10 - 20:09:59 INFO: Script execution started.
+2021-07-10 - 20:09:59 INFO: Using CPU.
+2021-07-10 - 20:09:59 INFO: Loading the FashionMNIST dataset.
+2021-07-10 - 20:09:59 INFO: Neural network training starting.
+2021-07-10 - 20:10:38 INFO: Accuracy too low; restarting training.
+2021-07-10 - 20:11:17 INFO: Analysis of t-SNE, trained network.
+2021-07-10 - 20:11:17 INFO: Computing activations inside the neural network.
+2021-07-10 - 20:11:21 INFO: Computing embeddings.
+2021-07-10 - 20:19:01 INFO: Computing values of metrics.
+2021-07-10 - 20:23:15 INFO: Analysis of t-SNE, untrained network.
+2021-07-10 - 20:23:15 INFO: Computing activations inside the neural network.
+2021-07-10 - 20:23:21 INFO: Computing embeddings.
+2021-07-10 - 20:30:39 INFO: Computing values of metrics.
+2021-07-10 - 20:34:25 INFO: Analysis of UMAP, trained network.
+2021-07-10 - 20:34:25 INFO: Computing activations inside the neural network.
+2021-07-10 - 20:34:29 INFO: Computing embeddings.
+2021-07-10 - 20:36:55 INFO: Computing values of metrics.
+2021-07-10 - 20:40:43 INFO: Analysis of UMAP, untrained network.
+2021-07-10 - 20:40:43 INFO: Computing activations inside the neural network.
+2021-07-10 - 20:40:47 INFO: Computing embeddings.
+2021-07-10 - 20:42:40 INFO: Computing values of metrics.
+2021-07-10 - 20:45:59 INFO: Saving the metric data.
