@@ -22,4 +22,5 @@ share/python-wheels/
 MANIFEST
 
 .ipynb_checkpoints
-data/
+data/MNIST
+data/FashionMNIST
