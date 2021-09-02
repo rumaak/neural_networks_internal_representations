@@ -1,0 +1,35 @@
+2021-09-02 - 08:39:09 INFO: Script execution started.
+2021-09-02 - 08:39:09 INFO: Using CPU.
+2021-09-02 - 08:39:09 INFO: Loading the MNIST dataset.
+2021-09-02 - 08:39:09 INFO: Neural network training starting.
+2021-09-02 - 08:39:55 INFO: Accuracy too low; restarting training.
+2021-09-02 - 08:40:37 INFO: Analysis of t-SNE, trained network.
+2021-09-02 - 08:40:37 INFO: Computing activations inside the neural network.
+2021-09-02 - 08:40:43 INFO: Computing embeddings.
+2021-09-02 - 08:43:47 INFO: Computing values of metrics.
+2021-09-02 - 08:44:29 INFO: Analysis of UMAP, trained network.
+2021-09-02 - 08:44:29 INFO: Computing embeddings.
+2021-09-02 - 08:46:37 INFO: Computing values of metrics.
+2021-09-02 - 08:46:50 INFO: Analysis of t-SNE, untrained network.
+2021-09-02 - 08:46:50 INFO: Computing activations inside the untrained neural network.
+2021-09-02 - 08:46:55 INFO: Computing embeddings.
+2021-09-02 - 08:49:54 INFO: Computing values of metrics.
+2021-09-02 - 08:50:08 INFO: Analysis of UMAP, untrained network.
+2021-09-02 - 08:50:08 INFO: Computing embeddings.
+2021-09-02 - 08:52:06 INFO: Computing values of metrics.
+2021-09-02 - 08:52:20 INFO: Loading the FashionMNIST dataset.
+2021-09-02 - 08:52:20 INFO: Neural network training starting.
+2021-09-02 - 08:52:59 INFO: Analysis of t-SNE, trained network.
+2021-09-02 - 08:52:59 INFO: Computing activations inside the neural network.
+2021-09-02 - 08:53:04 INFO: Computing embeddings.
+2021-09-02 - 08:56:03 INFO: Computing values of metrics.
+2021-09-02 - 08:56:48 INFO: Analysis of UMAP, trained network.
+2021-09-02 - 08:56:48 INFO: Computing embeddings.
+2021-09-02 - 08:58:52 INFO: Computing values of metrics.
+2021-09-02 - 08:59:06 INFO: Analysis of t-SNE, untrained network.
+2021-09-02 - 08:59:06 INFO: Computing activations inside the untrained neural network.
+2021-09-02 - 08:59:11 INFO: Computing embeddings.
+2021-09-02 - 09:02:12 INFO: Computing values of metrics.
+2021-09-02 - 09:02:26 INFO: Analysis of UMAP, untrained network.
+2021-09-02 - 09:02:26 INFO: Computing embeddings.
+2021-09-02 - 09:04:48 INFO: Computing values of metrics.

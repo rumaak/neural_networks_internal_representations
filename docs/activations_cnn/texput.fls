@@ -1,0 +1,4 @@
+PWD /home/rumaak/Dropbox/College/BP_RP/neural_networks_internal_representations/docs/activations_cnn
+INPUT /usr/share/texmf-dist/web2c/texmf.cnf
+INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
+OUTPUT texput.log

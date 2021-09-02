@@ -1,0 +1,667 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\author{Jan Ruman}
+\date{30.8.2021}
+\title{Analysis of activations in neural networks}
+
+\begin{document}
+
+\maketitle
+\author
+\date
+
+\begin{abstract}
+    In this work, we attempt to analyze the properties of activations inside
+    of a neural network. Embeddings of activations inside trained and
+    untrained neural network are compared across different layers.
+    According to our results, activations from the trained network
+    systematically outperform activations from the untrained network
+    in terms of embedding quality.
+\end{abstract}
+
+\section{Introduction}
+A neural network applies a sequence of non-linear transformations to its
+input in order to produce an output. This procedure can be (and is)
+done for all examples in the dataset. By storing the intermediate
+transformations, we end up with multiple different representations of the
+original dataset (possibly compressed and/or missing some information).
+
+This work aims to analyze these representations in terms of their structure.
+We are primarily interested in the way examples with the same class are
+distributed when using the new representations.
+
+\section{Methodology}
+We will compare the data representations across two dimensions:
+1) the depth of layer from which the representations were acquired and
+2) whether the network was or was not trained. This means we will need
+a neural network to be trained and datasets to train it on.
+
+The representations are going to have many dimensions - it will be more
+practical to use dimensionality reduction techniques that retain the
+structure of the data. For that purpose, we are going to use t-SNE and UMAP
+algorithms.
+
+We need some way of comparing the structure of different representations.
+Plotting embeddings acquired using dimensionality reduction techniques is
+one of them, but some more rigorous approaches will be necessary to acquire
+more reliable results. In order to measure the quality of a representation,
+i.e., how well it clusters the same examples together and keeps different
+examples away, we introduce several metrics in the next section.
+
+A convolutional neural network with ReLU activation function will be used.
+The first layer of the network is a convolutional layer and it consists of
+4 filters of size 5. The second layer is a subsampling layer with kernel
+size 2. The third layer is convolutional with 16 filters of size 3. The
+fourth layer is subsampling layer with kernel size 2. The fifth layer
+is convolutional with 64 filters of size 5. The sixth layer is fully
+connected. ReLU activation function is applied after second, fourth, fifth
+and sixth layer.
+
+As representations, we will use:
+\begin{itemize}
+    \item the original dataset
+    \item feature maps of the first layer (one for each filter)
+    \item feature maps of the second layer (one for each filter)
+    \item activations in the third layer (consisting of 64 1x1 feature maps)
+\end{itemize}
+
+We will use MNIST and FashionMNIST datasets. Because of memory limitations,
+we will only work with a subset of 5 000 examples of each dataset.
+
+\section{Embedding quality}
+To measure the quality of a representation, we introduce several metrics that
+capture the representation's properties. These properties then indicate how
+good the representation is.
+
+All except the last metric have distance as a unit. This is potentially
+problematic as the absolute distance between points tells us nothing if we
+do not know the distances between other points. It is thus necessary
+to divide each of these metrics by the average distance between two points;
+this will ensure that even though two embeddings have different scales, we
+can still compare their metrics.
+
+\subsection{Distances between points}
+The first two metrics are concerned with an average distance between two points.
+An average distance between points of the same class (\(d_s\)) and an average
+distance between points of different classes (\(d_d\)) are measured. It is
+quite obvious which one we would like to minimize and which one to maximize.
+
+\subsection{Cluster centroids}
+We can look at points belonging to the same class as a cluster. We introduce
+two metrics using centroids of these clusters: 1) the total distance from 
+points of a class to its centroid (\(c_s\)) and 2) the total distance between
+different centroids (\(c_d\)).
+
+\subsection{k-nearest neighbors}
+We can use the k-nearest neighbors algorithm on the embedding to classify
+examples in the dataset. The accuracy of k-nn (\(acc_{knn}\)) should
+correlate with the quality of the embedding.
+
+\section{Results}
+Results presented in this part were acquired by running the
+\texttt{\\ scripts/activations\_cnn.py} script. Output of this script
+used in this document is part of the repository (in particular, the output
+is stored in the \texttt{\\ out/activations\_cnn/} directory); rerunning
+the script might give slightly different results.
+
+In this work we will present only fraction of the visualizations actually
+computed because of lack of space. The reader might see the rest of the
+visualizations in the output directory mentioned above.
+
+\subsection{MNIST}
+First, we will look at embeddings produced by t-SNE. As there are 22
+embeddings in total, it wouldn't be practical to show them all. Instead,
+we are going to show one embedding per layer of the neural network. These
+can be seen in Figures 1 to 7.
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/mnist/t-sne/trained/plot_l0.png}
+    \caption{Embeddings of the original dataset (t-SNE).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/mnist/t-sne/trained/plot_l1_f0.png}
+    \caption{Embeddings of activations in the first layer of a neural network trained on MNIST (t-SNE).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/mnist/t-sne/trained/plot_l2_f0.png}
+    \caption{Embeddings of activations in the second layer of a neural network trained on MNIST (t-SNE).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/mnist/t-sne/trained/plot_l3.png}
+    \caption{Embeddings of activations in the third layer of a neural network trained on MNIST (t-SNE).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/mnist/t-sne/untrained/plot_l1_f0.png}
+    \caption{Embeddings of activations in the first layer of an untrained neural network (t-SNE).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/mnist/t-sne/untrained/plot_l2_f0.png}
+    \caption{Embeddings of activations in the second layer of an untrained neural network (t-SNE).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/mnist/t-sne/untrained/plot_l3.png}
+    \caption{Embeddings of activations in the third layer of an untrained neural network (t-SNE).}
+\end{figure}
+
+We might make an interesting observation - in the trained neural network, the
+representations don't seem to get simply better the deeper the layer is.
+Representations in the third layer seem to be the best (in terms of distances
+between examples of same / different class), but representations in the second
+and third layer seem to be worse than representations for the original
+dataset. This could be explained by the fact that a lot of information can
+be lost by applying a filter to an image; combining the outputs of
+the filters should then result in greater embedding quality. This would
+suggest that computing an average of values of individual metrics over
+the whole layer might not be the best way to actually evaluate the
+quality of embeddings for the whole layer; how that could be done is
+out of the scope of this work.
+
+The representations obtained from the untrained network follow the same
+pattern with two important distinctions:
+\begin{enumerate}
+  \item The representations are generally better in the trained network.
+  \item The representation quality is worse in the third layer of an
+      untrained neural network than it is in the case of the original
+      dataset; the opposite holds in the case of the trained network.
+\end{enumerate}
+
+Plotting the embeddings gives us a rough idea of the quality of the
+embeddings. However, we would also like to see values of metrics
+introduced in the previous section. Figures 8 to 11 present tables
+with values of those metrics. There are two values per layer and metric - the
+first one corresponds to the trained network, the second one to the untrained
+network. As it is not very easy to see what is the general trend in these
+values, we also provide plots with average values of metrics in each layer.
+We only provide plots for the \(d_s\) and \(d_d\) metrics for lack of space;
+however, the same trend can be observed in the rest of the metrics too.
+Figures 12 and 13 contain these plots.
+
+\begin{figure}
+  \centering
+    \resizebox{\textwidth}{!}{
+        \input{../../out/activations_cnn/mnist/t-sne/table_l0.tex}
+    }
+  \caption{Values of metrics for embeddings acquired by t-SNE, original dataset.}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \resizebox{\textwidth}{!}{
+        \input{../../out/activations_cnn/mnist/t-sne/table_l1.tex}
+    }
+    \caption{Values of metrics for embeddings acquired by t-SNE, first layer.}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \resizebox{\textwidth}{!}{
+        \input{../../out/activations_cnn/mnist/t-sne/table_l2.tex}
+    }
+    \caption{Values of metrics for embeddings acquired by t-SNE, second layer.}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \resizebox{\textwidth}{!}{
+        \input{../../out/activations_cnn/mnist/t-sne/table_l3.tex}
+    }
+    \caption{Values of metrics for embeddings acquired by t-SNE, third layer.}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=0.75\textwidth]{../../out/activations_cnn/mnist/t-sne/plot_metric_ds.png}
+    \caption{Average value of the \(d_s\) metric (t-SNE).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=0.75\textwidth]{../../out/activations_cnn/mnist/t-sne/plot_metric_dd.png}
+    \caption{Average value of the \(d_d\) metric (t-SNE).}
+\end{figure}
+
+The trend we are seeing both from the tables and from the plots is the same
+one we noted when inspecting the embeddings visually.
+
+Even the representations in the third layer of the trained neural network
+seem to contain some outliers - points that our in a wrong cluster. For
+example, we might notice that there are several examples with true label
+3 in the cluster of examples labeled 7. One such example can be seen in
+Figure 14.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.75\textwidth]{../../out/activations_cnn/mnist/t-sne/outliers/correct3_predicted7.png}
+    \caption{From left: an example of 3, an example of 7, the missclasified example.}
+\end{figure}
+
+The figure also contains two other examples, which show what an average
+example of 3 and 7 looks like. What we might notice is that the outlier
+does seem to contain features characteristic for both 3 and 7 and it
+might not be immediately clear, even to a human, what number it really
+is.
+
+It might also be of interest to us what do the individual filters do.
+Figures 15 to 17 visualize the activations of the network for an example
+from the dataset. 
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.75\textwidth]{../../out/activations_cnn/mnist/t-sne/filter_outputs/class5_l0.png}
+    \caption{An example of 5.}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.25\textwidth]{../../out/activations_cnn/mnist/t-sne/filter_outputs/class5_l1.png}
+  \caption{Activations in the first layer of the network for the example.}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.75\textwidth]{../../out/activations_cnn/mnist/t-sne/filter_outputs/class5_l2.png}
+    \caption{Activations in the second layer of the network for the example.}
+\end{figure}
+
+In the first layer, it seems that the first and third filter detects some
+variation of a horizontal line, and it also seems that the second and fourth
+filter detects some variation of a diagonal line. The activations in the
+second layer are not as easy to analyze and it is not clear what purpose each
+filter serves.
+
+Using UMAP to acquire embeddings, we get very similar results. Figures 18
+to 24 show the computed embeddings.
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/mnist/umap/trained/plot_l0.png}
+    \caption{Embeddings of the original dataset (UMAP).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/mnist/umap/trained/plot_l1_f0.png}
+    \caption{Embeddings of activations in the first layer of a neural network trained on MNIST (UMAP).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/mnist/umap/trained/plot_l2_f0.png}
+    \caption{Embeddings of activations in the second layer of a neural network trained on MNIST (UMAP).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/mnist/umap/trained/plot_l3.png}
+    \caption{Embeddings of activations in the third layer of a neural network trained on MNIST (UMAP).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/mnist/umap/untrained/plot_l1_f0.png}
+    \caption{Embeddings of activations in the first layer of an untrained neural network (UMAP).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/mnist/umap/untrained/plot_l2_f0.png}
+    \caption{Embeddings of activations in the second layer of an untrained neural network (UMAP).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/mnist/umap/untrained/plot_l3.png}
+    \caption{Embeddings of activations in the third layer of an untrained neural network (UMAP).}
+\end{figure}
+
+Again, we would like to confirm our observations by comparing values of
+metrics over the computed embeddings. These can be seen in Figures 25 to
+30.
+
+\begin{figure}
+  \centering
+    \resizebox{\textwidth}{!}{
+        \input{../../out/activations_cnn/mnist/umap/table_l0.tex}
+    }
+  \caption{Values of metrics for embeddings acquired by UMAP, original dataset.}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \resizebox{\textwidth}{!}{
+        \input{../../out/activations_cnn/mnist/umap/table_l1.tex}
+    }
+    \caption{Values of metrics for embeddings acquired by UMAP, first layer.}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \resizebox{\textwidth}{!}{
+        \input{../../out/activations_cnn/mnist/umap/table_l2.tex}
+    }
+    \caption{Values of metrics for embeddings acquired by UMAP, second layer.}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \resizebox{\textwidth}{!}{
+        \input{../../out/activations_cnn/mnist/umap/table_l3.tex}
+    }
+    \caption{Values of metrics for embeddings acquired by UMAP, third layer.}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=0.75\textwidth]{../../out/activations_cnn/mnist/umap/plot_metric_ds.png}
+    \caption{Average value of the \(d_s\) metric (UMAP).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=0.75\textwidth]{../../out/activations_cnn/mnist/umap/plot_metric_dd.png}
+    \caption{Average value of the \(d_d\) metric (UMAP).}
+\end{figure}
+
+Again, the trend we are seeing both from the tables and from the plots is the
+same one we noted when inspecting the embeddings visually.
+
+\subsection{FashionMNIST}
+Again, we start by looking at embeddings produced by t-SNE. A single embedding
+is shown per layer of the network in Figures 31 to 37.
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/fmnist/t-sne/trained/plot_l0.png}
+    \caption{Embeddings of the original dataset (t-SNE).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/fmnist/t-sne/trained/plot_l1_f0.png}
+    \caption{Embeddings of activations in the first layer of a neural network trained on FashionMNIST (t-SNE).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/fmnist/t-sne/trained/plot_l2_f0.png}
+    \caption{Embeddings of activations in the second layer of a neural network trained on FashionMNIST (t-SNE).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/fmnist/t-sne/trained/plot_l3.png}
+    \caption{Embeddings of activations in the third layer of a neural network trained on FashionMNIST (t-SNE).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/fmnist/t-sne/untrained/plot_l1_f0.png}
+    \caption{Embeddings of activations in the first layer of an untrained neural network (t-SNE).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/fmnist/t-sne/untrained/plot_l2_f0.png}
+    \caption{Embeddings of activations in the second layer of an untrained neural network (t-SNE).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/fmnist/t-sne/untrained/plot_l3.png}
+    \caption{Embeddings of activations in the third layer of an untrained neural network (t-SNE).}
+\end{figure}
+
+The trend we observed in the case of MNIST dataset is present in this case
+too. To make sure this is really the case, we compute values of metrics of
+embedding quality and compare between the trained and the untrained network.
+See Figures 38 to 43.
+
+\begin{figure}
+  \centering
+    \resizebox{\textwidth}{!}{
+        \input{../../out/activations_cnn/fmnist/t-sne/table_l0.tex}
+    }
+  \caption{Values of metrics for embeddings acquired by t-SNE, original dataset.}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \resizebox{\textwidth}{!}{
+        \input{../../out/activations_cnn/fmnist/t-sne/table_l1.tex}
+    }
+    \caption{Values of metrics for embeddings acquired by t-SNE, first layer.}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \resizebox{\textwidth}{!}{
+        \input{../../out/activations_cnn/fmnist/t-sne/table_l2.tex}
+    }
+    \caption{Values of metrics for embeddings acquired by t-SNE, second layer.}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \resizebox{\textwidth}{!}{
+        \input{../../out/activations_cnn/fmnist/t-sne/table_l3.tex}
+    }
+    \caption{Values of metrics for embeddings acquired by t-SNE, third layer.}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=0.75\textwidth]{../../out/activations_cnn/fmnist/t-sne/plot_metric_ds.png}
+    \caption{Average value of the \(d_s\) metric (t-SNE).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=0.75\textwidth]{../../out/activations_cnn/fmnist/t-sne/plot_metric_dd.png}
+    \caption{Average value of the \(d_d\) metric (t-SNE).}
+\end{figure}
+
+We would like to look again a bit more closely at the outliers present
+in the embeddings acquired from the third layer of the trained network.
+We notice there is a big overlap between the Shirt and T-shirt/top
+clusters. Figure 44 shows examples of these classes (as well as an
+example that would be missclasified as Shirt even though it is a
+T-shirt/top).
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.75\textwidth]{../../out/activations_cnn/fmnist/t-sne/outliers/correct0_predicted6.png}
+    \caption{From left: an example of T-shirt/top, an example of Shirt, the missclasified example.}
+\end{figure}
+
+We would also like to see what do the individual feature maps look like for
+some example. We will use a T-shirt/top as such an example. Figures 45 to 47
+contain these visualizations.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.75\textwidth]{../../out/activations_cnn/fmnist/t-sne/filter_outputs/class0_l0.png}
+    \caption{An example of a T-shirt/top.}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.25\textwidth]{../../out/activations_cnn/fmnist/t-sne/filter_outputs/class0_l1.png}
+  \caption{Activations in the first layer of the network for the example.}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.75\textwidth]{../../out/activations_cnn/fmnist/t-sne/filter_outputs/class0_l2.png}
+    \caption{Activations in the second layer of the network for the example.}
+\end{figure}
+
+Regarding the first layer, it is not clear what does the first filter
+detect; the second filter seems to detect a transition from light pixels
+to dark pixels in the top-bottom direction, and the third and fourth
+filter seem to detect bottom right and upper left edge of a group
+of light pixels, respectively. In the second layer, it is very hard to tell what meaning
+each of the filters has.
+
+Using UMAP to acquire embeddings, we get very similar results. Figures 48
+to 54 show the computed embeddings.
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/fmnist/umap/trained/plot_l0.png}
+    \caption{Embeddings of the original dataset (UMAP).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/fmnist/umap/trained/plot_l1_f0.png}
+    \caption{Embeddings of activations in the first layer of a neural network trained on FashionMNIST (UMAP).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/fmnist/umap/trained/plot_l2_f0.png}
+    \caption{Embeddings of activations in the second layer of a neural network trained on FashionMNIST (UMAP).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/fmnist/umap/trained/plot_l3.png}
+    \caption{Embeddings of activations in the third layer of a neural network trained on FashionMNIST (UMAP).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/fmnist/umap/untrained/plot_l1_f0.png}
+    \caption{Embeddings of activations in the first layer of an untrained neural network (UMAP).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/fmnist/umap/untrained/plot_l2_f0.png}
+    \caption{Embeddings of activations in the second layer of an untrained neural network (UMAP).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=1.0\textwidth]{../../out/activations_cnn/fmnist/umap/untrained/plot_l3.png}
+    \caption{Embeddings of activations in the third layer of an untrained neural network (UMAP).}
+\end{figure}
+
+Again, we would like to confirm our observations by comparing values of
+metrics over the computed embeddings. These can be seen in Figures 54 to
+59.
+
+\begin{figure}
+  \centering
+    \resizebox{\textwidth}{!}{
+        \input{../../out/activations_cnn/fmnist/umap/table_l0.tex}
+    }
+  \caption{Values of metrics for embeddings acquired by UMAP, original dataset.}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \resizebox{\textwidth}{!}{
+        \input{../../out/activations_cnn/fmnist/umap/table_l1.tex}
+    }
+    \caption{Values of metrics for embeddings acquired by UMAP, first layer.}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \resizebox{\textwidth}{!}{
+        \input{../../out/activations_cnn/fmnist/umap/table_l2.tex}
+    }
+    \caption{Values of metrics for embeddings acquired by UMAP, second layer.}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \resizebox{\textwidth}{!}{
+        \input{../../out/activations_cnn/fmnist/umap/table_l3.tex}
+    }
+    \caption{Values of metrics for embeddings acquired by UMAP, third layer.}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=0.75\textwidth]{../../out/activations_cnn/fmnist/umap/plot_metric_ds.png}
+    \caption{Average value of the \(d_s\) metric (UMAP).}
+\end{figure}
+
+\begin{figure}
+  \centering
+    \includegraphics[width=0.75\textwidth]{../../out/activations_cnn/fmnist/umap/plot_metric_dd.png}
+    \caption{Average value of the \(d_d\) metric (UMAP).}
+\end{figure}
+
+Again, the trend we are seeing both from the tables and from the plots is the
+same one we noted when inspecting the embeddings visually.
+
+\section{Conclusions}
+In this work, we attempted to tackle the problem of data representation using
+activations of a neural network. To find out whether these representations
+are superior to their original counterparts, we compared them both visually
+and using several metrics of embedding quality.
+
+According to our results, the quality of embeddings acquired from a trained
+network is in general better than the quality of embeddings acquired from
+an untrained network irrespectively of depth of layer. Moreover, the quality
+of embeddings acquired from the last layer of a network is generally better
+than the embeddings computed from the original dataset in the case of
+trained neural network, but not in the case of the untrained one.
+
+Our results also suggest that by applying a convolutional filter a feature
+map missing part of the information present in the original image is
+obtained, and both in the case of trained and untrained network different
+filters seem to extract different information from the original image.
+
+\section{Future work}
+We only used two very simple datasets, MNIST and FashionMNIST. Applying
+our methods to more datasets is needed to ensure our results are not
+specific to just these two datasets.
+
+The metrics of embedding quality we used were rather arbitrary. A further
+research into measures of embedding quality and their subsequent application
+might make the obtained results more relevant.
+
+The results were acquired by training the neural network once. To make
+the results more reliable, several runs and a subsequent statistical
+analysis would be a great step forward in terms of the quality of the
+obtained results.
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
